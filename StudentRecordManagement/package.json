@@ -1,0 +1,21 @@
+{
+    "name": "student-record-management",
+    "version": "1.0.0",
+    "description": "A RESTful API to manage student records using Node.js and Express.js with file-based storage",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "keywords": [
+        "student",
+        "api",
+        "express",
+        "nodejs"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}
