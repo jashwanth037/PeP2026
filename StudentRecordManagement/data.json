@@ -1,15 +1,63 @@
 {
   "students": [
     {
-      "id": 1,
-      "name": "Blice",
-      "email": "alice00@gmail.com",
-      "course": "Cse"
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob.smith@gmail.com",
+      "course": "Electrical Engineering"
     },
     {
-      "id": 2,
-      "name": "Blice",
-      "email": "al@gmail.com",
+      "id": 3,
+      "name": "Charlie Brown",
+      "email": "charlie.brown@gmail.com",
+      "course": "Mechanical Engineering"
+    },
+    {
+      "id": 4,
+      "name": "Diana Ross",
+      "email": "diana.ross@gmail.com",
+      "course": "Information Technology"
+    },
+    {
+      "id": 5,
+      "name": "Edward Wilson",
+      "email": "edward.wilson@gmail.com",
+      "course": "Civil Engineering"
+    },
+    {
+      "id": 6,
+      "name": "Fiona Davis",
+      "email": "fiona.davis@gmail.com",
+      "course": "Data Science"
+    },
+    {
+      "id": 7,
+      "name": "George Miller",
+      "email": "george.miller@gmail.com",
+      "course": "Artificial Intelligence"
+    },
+    {
+      "id": 8,
+      "name": "Hannah Taylor",
+      "email": "hannah.taylor@gmail.com",
+      "course": "Cybersecurity"
+    },
+    {
+      "id": 9,
+      "name": "Ivan Martinez",
+      "email": "ivan.martinez@gmail.com",
+      "course": "Software Engineering"
+    },
+    {
+      "id": 10,
+      "name": "Julia Anderson",
+      "email": "julia.anderson@gmail.com",
+      "course": "Computer Science"
+    },
+    {
+      "id": 11,
+      "name": "sae",
+      "email": "sai@gmail.com",
       "course": "Cse"
     }
   ]
