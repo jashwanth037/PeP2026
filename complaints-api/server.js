@@ -1,17 +1,7 @@
-import express from 'express';
+import app from './app.js';
 
-const app = express()
+const PORT = 3000;
 
-app.get('/', (req, res) => {
-    res.json({
-        "message": "File a Complaint about Anime streaming services",
-        "APIroutes": `GET /complaints → Fetch all complaints (Public)
-                      POST /complaints → Create a new complaint (Public)
-                      PUT /complaints/:id/resolve → Resolve a complaint (Protected)
-                      DELETE /complaints/:id → Delete a complaint (Protected)`
-    });
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
-
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
-})
