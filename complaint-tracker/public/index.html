@@ -4,27 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint Tracker</title>
+    <title>Submit Complaint</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="main-container">
-        <h1>Submit a Complaint</h1>
-        <div class="form-box">
-            <form id="complaintForm">
-                <label for="title">Title:</label>
-                <input type="text" id="title" required placeholder="Enter title">
-
-                <label for="description">Description:</label>
-                <textarea id="description" required placeholder="Enter description"></textarea>
-
-                <button type="submit">Submit</button>
-            </form>
-            <p id="statusMessage"></p>
+    <div class="container">
+        <h1>Anime Streaming Complaint Tracker</h1>
+        <form id="complaintForm">
+            <div class="form-group">
+                <label>Complaint Title</label>
+                <input type="text" id="title" required placeholder="What's the issue?">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" required placeholder="Tell us more..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="yourname@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>Phone (Optional)</label>
+                <input type="tel" id="phone" placeholder="Your number">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="message" class="message"></div>
+        <div class="nav">
+            <a href="admin.html">Admin Panel</a>
         </div>
-        <br>
-        <a href="admin.html">Go to Admin Panel</a>
     </div>
     <script src="script.js"></script>
 </body>
