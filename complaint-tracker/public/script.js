@@ -1,98 +1,109 @@
-const API_URL = 'http://localhost:3000/complaints';
+const API_URL = '/complaints';
 
-// --- User Page Logic ---
-const complaintForm = document.getElementById('complaintForm');
-if (complaintForm) {
-    complaintForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
+document.addEventListener('DOMContentLoaded', () => {
+    const complaintForm = document.getElementById('complaintForm');
+    const messageDiv = document.getElementById('message');
 
-        fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: title, description: description })
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('statusMessage').innerText = "Complaint Submitted! ID: " + data.id;
-                document.getElementById('statusMessage').style.color = "green";
-                complaintForm.reset();
-            })
-            .catch(error => console.error('Error:', error));
-    });
-}
+    if (complaintForm) {
+        complaintForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-// --- Admin Page Logic ---
-const complaintList = document.getElementById('complaintList');
-if (complaintList) {
-    // Load on start
-    fetchComplaints();
-}
+            const payload = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
 
-function fetchComplaints() {
-    if (!complaintList) return;
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-    complaintList.innerHTML = "Loading...";
+                const data = await response.json();
 
-    fetch(API_URL)
-        .then(response => response.json())
-        .then(data => {
-            complaintList.innerHTML = "";
-            if (data.length === 0) {
-                complaintList.innerHTML = "<p>No complaints yet.</p>";
-                return;
+                if (response.ok) {
+                    messageDiv.innerHTML = `<span style="color: green;">Submitted! ID: ${data.id}</span>`;
+                    complaintForm.reset();
+                } else {
+                    messageDiv.innerHTML = `<span style="color: red;">${data.message}</span>`;
+                }
+            } catch (err) {
+                console.error(err);
+                messageDiv.innerHTML = '<span style="color: red;">Error connecting to server.</span>';
             }
+        });
+    }
 
-            data.forEach(complaint => {
-                const div = document.createElement('div');
-                div.className = "complaint-card";
-                div.innerHTML = `
-                <p><strong>ID:</strong> ${complaint.id}</p>
-                <h3>${complaint.title}</h3>
-                <p>${complaint.description}</p>
-                <p>Status: <span class="status-badge status-${complaint.status}">${complaint.status}</span></p>
-                <div class="action-buttons">
-                    <button class="btn-resolve" onclick="updateStatus(${complaint.id}, 'resolved')">Resolve</button>
-                    <button class="btn-reject" onclick="updateStatus(${complaint.id}, 'rejected')">Reject</button>
-                    <button class="btn-delete" onclick="deleteComplaint(${complaint.id})">Delete</button>
+    const complaintList = document.getElementById('complaintList');
+    if (complaintList) {
+        fetchComplaints();
+        document.getElementById('refreshBtn').onclick = fetchComplaints;
+    }
+});
+
+async function fetchComplaints() {
+    const list = document.getElementById('complaintList');
+    if (!list) return;
+
+    list.innerHTML = 'Loading...';
+
+    try {
+        const res = await fetch('/complaints');
+        const data = await res.json();
+        list.innerHTML = '';
+
+        if (data.length === 0) {
+            list.innerHTML = '<p>No complaints yet.</p>';
+            return;
+        }
+
+        data.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'complaint-card';
+            div.innerHTML = `
+                <h3>#${c.id} - ${c.title}</h3>
+                <p><strong>From:</strong> ${c.email} | <strong>Phone:</strong> ${c.phone}</p>
+                <p>${c.description}</p>
+                <p>Status: <span class="status-tag status-${c.status}">${c.status}</span></p>
+                <div class="card-actions">
+                    <select onchange="updateStatus(${c.id}, this.value)">
+                        <option value="pending" ${c.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="resolved" ${c.status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                        <option value="rejected" ${c.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                    </select>
+                    <button class="btn-delete" onclick="deleteComplaint(${c.id})">Delete</button>
                 </div>
             `;
-                complaintList.appendChild(div);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            complaintList.innerHTML = "<p>Error connecting to server.</p>";
+            list.appendChild(div);
         });
+    } catch (err) {
+        console.error(err);
+        list.innerHTML = '<p style="color: red;">Failed to load.</p>';
+    }
 }
 
-function updateStatus(id, newStatus) {
-    fetch(`${API_URL}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-    })
-        .then(response => {
-            if (response.ok) {
-                fetchComplaints(); // Refresh list
-            } else {
-                alert("Failed to update status");
-            }
+async function updateStatus(id, newStatus) {
+    try {
+        await fetch(`/complaints/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
         });
+        fetchComplaints();
+    } catch (err) {
+        console.error(err);
+    }
 }
 
-function deleteComplaint(id) {
-    if (!confirm("Are you sure?")) return;
-
-    fetch(`${API_URL}/${id}`, {
-        method: 'DELETE'
-    })
-        .then(response => {
-            if (response.ok) {
-                fetchComplaints(); // Refresh list
-            } else {
-                alert("Failed to delete");
-            }
-        });
+async function deleteComplaint(id) {
+    if (!confirm('Are you sure?')) return;
+    try {
+        await fetch(`/complaints/${id}`, { method: 'DELETE' });
+        fetchComplaints();
+    } catch (err) {
+        console.error(err);
+    }
 }
