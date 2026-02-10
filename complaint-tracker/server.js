@@ -3,21 +3,16 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// In-memory data store
 let complaints = [];
 let nextId = 1;
 
-// Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-// Routes
-// GET /complaints - Get all complaints
 app.get('/complaints', (req, res) => {
     res.json(complaints);
 });
 
-// GET /complaints/:id - Get complaint by ID
 app.get('/complaints/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const complaint = complaints.find(c => c.id === id);
@@ -25,29 +20,30 @@ app.get('/complaints/:id', (req, res) => {
     res.json(complaint);
 });
 
-// POST /complaints - Add complaint
 app.post('/complaints', (req, res) => {
-    const { title, description } = req.body;
-    if (!title || !description) {
-        return res.status(400).json({ message: 'Title and description required' });
+    const { title, description, email, phone } = req.body;
+
+    if (!title || !description || !email) {
+        return res.status(400).json({ message: 'Missing required fields (title, description, or email)' });
     }
 
     const newComplaint = {
         id: nextId++,
         title,
         description,
-        status: 'pending' // Default status
+        email,
+        phone: phone || 'N/A',
+        status: 'pending'
     };
+
     complaints.push(newComplaint);
     res.status(201).json(newComplaint);
 });
 
-// PUT /complaints/:id - Update status
 app.put('/complaints/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const { status } = req.body;
 
-    // Validate status
     const validStatuses = ['pending', 'resolved', 'rejected'];
     if (!validStatuses.includes(status)) {
         return res.status(400).json({ message: 'Invalid status' });
@@ -60,7 +56,6 @@ app.put('/complaints/:id', (req, res) => {
     res.json(complaint);
 });
 
-// DELETE /complaints/:id - Delete complaint
 app.delete('/complaints/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const index = complaints.findIndex(c => c.id === id);
@@ -71,7 +66,6 @@ app.delete('/complaints/:id', (req, res) => {
     res.status(204).send();
 });
 
-// Start Server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
