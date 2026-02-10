@@ -4,19 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="main-container">
-        <h1>Admin Panel</h1>
-        <button id="refreshBtn" onclick="fetchComplaints()">Refresh Complaints</button>
-        <div id="complaintList">
-            <!-- Complaints will appear here -->
+    <div class="container admin-container">
+        <h1>Dashboard</h1>
+        <div class="admin-controls">
+            <button id="refreshBtn">Refresh</button>
+            <a href="index.html" class="btn-link">Back</a>
         </div>
-        <br>
-        <a href="index.html">Back to Home</a>
+        <div id="complaintList" class="complaint-list"></div>
     </div>
     <script src="script.js"></script>
 </body>
