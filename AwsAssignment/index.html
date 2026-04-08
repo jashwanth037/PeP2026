@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="A stunning static website hosted on Amazon S3 — showcasing cloud hosting, AWS S3 features, and modern web design.">
+    <meta name="keywords" content="AWS, S3, Static Website, Cloud Hosting, Amazon Web Services">
+    <meta name="author" content="Jashwanth">
+    <title>Hello AWS 🌍 — Static Website on Amazon S3</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent: #FF9900;
+            --accent-glow: rgba(255, 153, 0, 0.45);
+            --purple: #7B2FBE;
+            --blue: #2563EB;
+            --teal: #0D9488;
+            --dark: #0a0a1a;
+            --card-bg: rgba(255, 255, 255, 0.06);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --radius: 20px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ═══ Custom Scrollbar ═══ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--purple), var(--teal));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--accent), var(--purple));
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ═══════════════════════════════════════════
+           ANIMATED GRADIENT BACKGROUND
+           ═══════════════════════════════════════════ */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0533 25%, #0c1445 50%, #0a2a2a 75%, #0a0a1a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            25% {
+                background-position: 100% 0%;
+            }
+
+            50% {
+                background-position: 100% 100%;
+            }
+
+            75% {
+                background-position: 0% 100%;
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+           FLOATING ORBS (Pure CSS Particles)
+           ═══════════════════════════════════════════ */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: floatOrb linear infinite;
+        }
+
+        .orb:nth-child(1) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--purple), transparent 70%);
+            top: 10%;
+            left: 10%;
+            animation-duration: 20s;
+        }
+
+        .orb:nth-child(2) {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, var(--blue), transparent 70%);
+            top: 50%;
+            right: 10%;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        .orb:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--teal), transparent 70%);
+            bottom: 20%;
+            left: 30%;
+            animation-duration: 18s;
+            animation-delay: -10s;
+        }
+
+        .orb:nth-child(4) {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--accent), transparent 70%);
+            top: 30%;
+            left: 60%;
+            animation-duration: 22s;
+            animation-delay: -3s;
+            opacity: 0.2;
+        }
+
+        .orb:nth-child(5) {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #6366f1, transparent 70%);
+            bottom: 10%;
+            right: 20%;
+            animation-duration: 28s;
+            animation-delay: -8s;
+            opacity: 0.15;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(80px, -60px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-40px, -120px) scale(0.9);
+            }
+
+            75% {
+                transform: translate(60px, -30px) scale(1.05);
+            }
+
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        /* ═══ Floating Particles ═══ */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: riseParticle linear infinite;
+        }
+
+        .particle:nth-child(1) {
+            left: 5%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 15%;
+            animation-duration: 15s;
+            animation-delay: -2s;
+            width: 3px;
+            height: 3px;
+        }
+
+        .particle:nth-child(3) {
+            left: 25%;
+            animation-duration: 10s;
+            animation-delay: -4s;
+        }
+
+        .particle:nth-child(4) {
+            left: 35%;
+            animation-duration: 18s;
+            animation-delay: -6s;
+            width: 2px;
+            height: 2px;
+        }
+
+        .particle:nth-child(5) {
+            left: 45%;
+            animation-duration: 14s;
+            animation-delay: -1s;
+        }
+
+        .particle:nth-child(6) {
+            left: 55%;
+            animation-duration: 16s;
+            animation-delay: -3s;
+            width: 3px;
+            height: 3px;
+        }
+
+        .particle:nth-child(7) {
+            left: 65%;
+            animation-duration: 11s;
+            animation-delay: -5s;
+        }
+
+        .particle:nth-child(8) {
+            left: 75%;
+            animation-duration: 13s;
+            animation-delay: -7s;
+            width: 2px;
+            height: 2px;
+        }
+
+        .particle:nth-child(9) {
+            left: 85%;
+            animation-duration: 17s;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(10) {
+            left: 92%;
+            animation-duration: 19s;
+            animation-delay: -9s;
+            width: 3px;
+            height: 3px;
+        }
+
+        @keyframes riseParticle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+           FLOATING NAVBAR
+           ═══════════════════════════════════════════ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 26, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 10px 0;
+        }
+
+        .navbar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #ffcc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* ═══════════════════════════════════════════
+           HERO SECTION
+           ═══════════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        /* AWS S3 Badge */
+        .aws-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 153, 0, 0.12);
+            border: 1px solid rgba(255, 153, 0, 0.3);
+            color: var(--accent);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+            animation: fadeInDown 0.8s ease forwards, badgePulse 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .aws-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 153, 0, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 0 0 12px rgba(255, 153, 0, 0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+            /* Neon glow */
+            text-shadow:
+                0 0 10px rgba(123, 47, 190, 0.5),
+                0 0 40px rgba(123, 47, 190, 0.3),
+                0 0 80px rgba(123, 47, 190, 0.15);
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--accent), #ffcc66, var(--accent));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shineText 4s linear infinite;
+        }
+
+        @keyframes shineText {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.35s ease;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #e68a00);
+            color: #000;
+            box-shadow: 0 4px 25px rgba(255, 153, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(255, 153, 0, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ═══════════════════════════════════════════
+           SECTION STYLING
+           ═══════════════════════════════════════════ */
+        section {
+            padding: 100px 24px;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-shadow:
+                0 0 10px rgba(123, 47, 190, 0.3),
+                0 0 30px rgba(123, 47, 190, 0.15);
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ═══════════════════════════════════════════
+           FEATURE CARDS — Glassmorphism
+           ═══════════════════════════════════════════ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 153, 0, 0.05), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 153, 0, 0.3);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 153, 0, 0.08);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .card-icon.icon-s3 {
+            background: linear-gradient(135deg, rgba(255, 153, 0, 0.2), rgba(255, 153, 0, 0.05));
+            border: 1px solid rgba(255, 153, 0, 0.2);
+        }
+
+        .card-icon.icon-static {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .card-icon.icon-cloud {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.2), rgba(13, 148, 136, 0.05));
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.75;
+            font-size: 0.95rem;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .card-tag {
+            font-size: 0.72rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ═══════════════════════════════════════════
+           ABOUT SECTION
+           ═══════════════════════════════════════════ */
+        .about-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 48px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple), var(--accent), var(--teal));
+            border-radius: 0 0 4px 4px;
+        }
+
+        .about-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .about-card p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+
+        .about-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .tech-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .tech-pill:hover {
+            border-color: var(--accent);
+            background: rgba(255, 153, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* ═══════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════ */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .footer .accent {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--purple), var(--accent));
+            margin: 16px auto;
+            border-radius: 2px;
+        }
+
+        /* ═══════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stagger children */
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .reveal-delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                background: rgba(10, 10, 26, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--card-border);
+                padding: 16px 0;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links li {
+                text-align: center;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 12px 24px;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .about-card {
+                padding: 32px 24px;
+            }
+
+            section {
+                padding: 60px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ Animated Background ═══ -->
+    <div class="bg-gradient"></div>
+
+    <!-- ═══ Floating Orbs ═══ -->
+    <div class="orb-container">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- ═══ Floating Particles ═══ -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         NAVBAR
+         ═══════════════════════════════════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <div class="nav-logo">☁️ AWS S3</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+         HERO SECTION
+         ═══════════════════════════════════════════ -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="aws-badge">
+                <span class="dot"></span>
+                Live on AWS S3
+            </div>
+            <h1>Hello <span class="gradient-text">AWS</span> 🌍</h1>
+            <p class="subtitle">My First Static Website Hosted on Amazon S3 — built with pure HTML & CSS, designed to
+                impress, and deployed to the cloud.</p>
+            <div class="hero-buttons">
+                <a href="#features" class="btn btn-primary">
+                    Explore Features ↓
+                </a>
+                <a href="#about" class="btn btn-outline">
+                    About This Project
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         FEATURES SECTION
+         ═══════════════════════════════════════════ -->
+    <section id="features">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-label">Why It Matters</span>
+                <h2 class="section-title">Cloud Hosting Essentials</h2>
+                <p class="section-subtitle">Understanding the building blocks of modern web infrastructure — from
+                    storage to deployment.</p>
+            </div>
+            <div class="features-grid">
+                <!-- Card 1: AWS S3 -->
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="card-icon icon-s3">🪣</div>
+                    <h3>What is AWS S3?</h3>
+                    <p>Amazon Simple Storage Service (S3) is a highly scalable, durable, and secure object storage
+                        service. It stores virtually unlimited data — from images and videos to entire websites — with
+                        99.999999999% (11 nines) durability. S3 powers millions of applications across the globe.</p>
+                    <div class="card-tags">
+                        <span class="card-tag">Object Storage</span>
+                        <span class="card-tag">11 Nines Durability</span>
+                        <span class="card-tag">Scalable</span>
+                    </div>
+                </div>
+                <!-- Card 2: Static Hosting -->
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="card-icon icon-static">⚡</div>
+                    <h3>Static Website Hosting</h3>
+                    <p>Static hosting serves pre-built HTML, CSS, and JavaScript files directly to the browser — no
+                        servers or databases needed. This means lightning-fast load times, zero server maintenance, and
+                        incredibly low costs. Perfect for portfolios, landing pages, and documentation sites.</p>
+                    <div class="card-tags">
+                        <span class="card-tag">No Server Needed</span>
+                        <span class="card-tag">Fast Delivery</span>
+                        <span class="card-tag">Cost Effective</span>
+                    </div>
+                </div>
+                <!-- Card 3: Cloud Hosting -->
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="card-icon icon-cloud">🌐</div>
+                    <h3>Why Cloud Hosting?</h3>
+                    <p>Cloud hosting eliminates the need for physical hardware. Your content is distributed across
+                        multiple data centers worldwide, ensuring high availability and fault tolerance. With
+                        pay-as-you-go pricing, you only pay for what you use — scaling effortlessly from one visitor to
+                        millions.</p>
+                    <div class="card-tags">
+                        <span class="card-tag">Global CDN</span>
+                        <span class="card-tag">High Availability</span>
+                        <span class="card-tag">Pay-As-You-Go</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         ABOUT SECTION
+         ═══════════════════════════════════════════ -->
+    <section id="about">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-label">Behind the Scenes</span>
+                <h2 class="section-title">About This Project</h2>
+            </div>
+            <div class="about-card reveal">
+                <h3>🚀 A Cloud-Native Showcase</h3>
+                <p>This project demonstrates how to deploy a beautiful, fully-functional static website using <strong
+                        style="color: var(--accent);">Amazon S3's static website hosting</strong> feature. It's a single
+                    self-contained HTML file — no frameworks, no CDN dependencies, no build step required.</p>
+                <p>Every visual element you see — the animated gradient background, glassmorphism effects, floating
+                    particles, and neon glows — is built with <strong style="color: #a78bfa;">pure CSS and minimal
+                        vanilla JavaScript</strong>. The goal was to prove that cloud hosting + clean code can produce
+                    portfolio-quality results.</p>
+                <p>Designed and developed as a hands-on exercise in AWS cloud fundamentals, modern CSS techniques, and
+                    responsive web design.</p>
+                <div class="tech-stack">
+                    <span class="tech-pill">📄 HTML5</span>
+                    <span class="tech-pill">🎨 CSS3</span>
+                    <span class="tech-pill">⚙️ JavaScript</span>
+                    <span class="tech-pill">☁️ AWS S3</span>
+                    <span class="tech-pill">🔒 IAM Policies</span>
+                    <span class="tech-pill">🌍 Static Hosting</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Built by <span class="accent">Jashwanth</span></p>
+            <div class="footer-divider"></div>
+            <p>Powered by <span class="accent">HTML</span> · <span class="accent">CSS</span> · <span class="accent">AWS
+                    S3</span></p>
+            <p style="margin-top: 8px; font-size: 0.75rem; opacity: 0.5;">© 2026 — Hosted on Amazon S3 Static Website
+                Hosting</p>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════
+         JAVASCRIPT (Minimal)
+         ═══════════════════════════════════════════ -->
+    <script>
+        // ─── Navbar scroll effect ───
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ─── Mobile nav toggle ───
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        // Close mobile nav on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ─── Scroll reveal (IntersectionObserver) ───
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
